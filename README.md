@@ -94,3 +94,27 @@ Then visit: http://127.0.0.1:8000/
 2. RELIANCE.NS, TCS.NS, INFY.NS, HDFCBANK.NS
 
 Make sure the ticker exists on Yahoo Finance
+
+## Screenshots
+
+To provide a better understanding of the Student Study Portal application, here is a screenshot:
+
+##Home Interface
+
+![Home Interface](screenshots/home.png)
+
+##Register Interface
+
+![Register Interface](screenshots/register.png)
+
+##Login Interface
+
+![Login Interface](screenshots/login.png)
+
+##Dashboard Interface
+
+![Dashboard Interface](screenshots/dashboard1.png)
+
+![Dashboard Interface](screenshots/dashboard2.png)
+
+![Dashboard Interface](screenshots/dashboard3.png)
