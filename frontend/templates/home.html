@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Home - Stock Insight
+{% endblock %}
+
+{% block content %}
+
+<div style="text-align: center; padding: 40px 20px;">
+    <h1 style="font-size: 2.5rem; color: #1e3a8a; margin-bottom: 20px;">📈 Welcome to <span style="color: #4f46e5;">Stock Insight</span></h1>
+    <p style="font-size: 1.1rem; color: #374151; margin-bottom: 30px;">
+        Predict tomorrow’s stock prices using Machine Learning & AI.
+    </p>
+
+    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <a href="/login" class="home-btn">🔐 Login</a>
+        <a href="/register" class="home-btn">📝 Register</a>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Dashboard
+{% endblock %}
+
+{% block content %}
+
+<h2>Welcome {{ user.username }}</h2>
+
+<form id="predict-form">
+    {% csrf_token %}
+    <input type="text" name="ticker" placeholder="Enter Ticker (e.g. AAPL)">
+    <button type="submit">Predict</button>
+</form>
+
+<div id="result" style="margin-top: 20px;"></div>
+
+<h3>Past Predictions</h3>
+<table border="1">
+    <thead>
+        <tr>
+            <th>Ticker</th>
+            <th>Predicted Price</th>
+            <th>RMSE</th>
+            <th>R2</th>
+            <th>Date</th>
+        </tr>
+    </thead>
+    <tbody id="predictions-body">
+    </tbody>
+</table>
+
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": csrftoken }
+    });
+    $("#predict-form").submit(function(e) {
+        e.preventDefault();
+        const formData = $(this).serialize();
+        $.ajax({
+            url: "/api/v1/predict/",
+            type: "POST",
+            data: formData,
+            success: function(response) {
+                $("#result").html(`
+                    <p><strong>Predicted Price:</strong> ₹${response.next_day_price}</p>
+                    <p><strong>RMSE:</strong> ${response.rmse}</p>
+                    <p><strong>R2:</strong> ${response.r2}</p>
+                `);
+                fetchPredictions(); 
+            },
+            error: function(err) {
+                alert("Prediction failed: " + (err.responseJSON?.error || "Unknown error"));
+            }
+        });
+    });
+    function fetchPredictions() {
+        $.ajax({
+            url: "/api/v1/predictions/",
+            type: "GET",
+            success: function(predictions) {
+                let html = "";
+                predictions.forEach(pred => {
+                    html += `
+                        <tr>
+                            <td>${pred.ticker}</td>
+                            <td>${pred.predicted_price}</td>
+                            <td>${pred.rmse}</td>
+                            <td>${pred.r2}</td>
+                            <td>${pred.created_at}</td>
+                        </tr>
+                    `;
+                });
+                $("#predictions-body").html(html);
+            },
+            error: function(err) {
+                console.error("Failed to fetch predictions:", err);
+            }
+        });
+    }
+    $(document).ready(fetchPredictions);
+</script>
+
+{% endblock %}
